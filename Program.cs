@@ -3,26 +3,10 @@ using System.Collections;
 using System.Linq;
 using log4net;
 using NServiceBus;
-using NServiceBus.Config;
-using NServiceBus.Config.ConfigurationSource;
-using System.Configuration;
 using NServiceBus.Unicast;
-using NServiceBus.Unicast.Config;
 
 namespace NServiceBusDemo
 {
-    public static class MyMappingExtension
-    {
-        public static ConfigUnicastBus AddMapping(this ConfigUnicastBus config, Hashtable mapping)
-        {
-            config.RunCustomAction(() =>
-                Configure.Instance.Configurer.ConfigureProperty<UnicastBus>(x => x.MessageOwners, mapping)
-                );
-
-            return config;
-        }
-    }
-
     class Program
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(AnotherMessageHandler));
@@ -90,7 +74,6 @@ namespace NServiceBusDemo
                     .MsmqSubscriptionStorage()
                 .UnicastBus()
                     .ImpersonateSender(false)
-                    //.AddMapping(mapping)
                     .LoadMessageHandlers()
                 .CreateBus()
                 .Start();
@@ -101,29 +84,6 @@ namespace NServiceBusDemo
             var bus = StructureMap.ObjectFactory.GetInstance<IBus>();
 
             bus.Send(new SomeMessage { Text = "Hello World!" });
-        }
-    }
-
-    sealed class MyConfigurationSource : IConfigurationSource
-    {
-        private readonly string _inputQueue;
-
-        public MyConfigurationSource(string inputQueue)
-        {
-            _inputQueue = inputQueue;
-        }
-
-        public T GetConfiguration<T>() where T : class
-        {
-            Console.WriteLine("==== {0} ==== ", typeof(T));
-
-            if (typeof(T) == typeof(MsmqTransportConfig))
-                return new MsmqTransportConfig
-                           {
-                               InputQueue = _inputQueue
-                           } as T;
-
-            return ConfigurationManager.GetSection(typeof(T).Name) as T;
         }
     }
 }

@@ -62,10 +62,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnotherMessage.cs" />
+    <Compile Include="AnotherMessageHandler.cs" />
     <Compile Include="ConfigureSoapSerializer.cs" />
+    <Compile Include="MyConfigurationSource.cs" />
+    <Compile Include="MyMappingExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoapMessageSerializer.cs" />
+    <Compile Include="SomeMessage.cs" />
     <Compile Include="SomeMessageHandler.cs" />
   </ItemGroup>
   <ItemGroup>
